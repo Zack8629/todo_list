@@ -14,7 +14,7 @@
           crossorigin="anonymous">
 
     {% block title %}
-        <title>To-do list</title>
+        <title>{{ page_title }}</title>
     {% endblock %}
 
     {% block style %}
@@ -36,7 +36,7 @@
     {% endblock %}
 
     {% block footer %}
-        {% include 'footer.html' %}
+        {% include 'bottom.html' %}
     {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
