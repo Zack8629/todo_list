@@ -7,21 +7,19 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'tasks:create_task' %}">Создать задачу</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Сортировать по
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Имени пользователя</a></li>
-                        <li><a class="dropdown-item" href="#">Email</a></li>
-                        <li><a class="dropdown-item" href="#">Статусу</a></li>
-                    </ul>
-                </li>
+                <select id="sorting_select" style="width: 150px">
+                    <option class="desc username">Пользователь</option>
+                    <option class="asc username">- Пользователь</option>
+                    <option class="desc email">Email</option>
+                    <option class="asc email">-Email</option>
+                    <option class="desc is_done">Статус</option>
+                    <option class="asc is_done">-Статус</option>
+                </select>
             </ul>
 
             {% if request.user.is_authenticated %}
@@ -49,3 +47,65 @@
         </div>
     </div>
 </nav>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.6.0.slim.js"
+        integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+        crossorigin="anonymous">
+</script>
+<script>
+    let paramsString = document.location.search;
+    let searchParams = new URLSearchParams(paramsString);
+
+    let sort = searchParams.get("sorting");
+    let field = searchParams.get("field");
+    let search_field = searchParams.get("search");
+    console.log(sort, field)
+
+    let page = searchParams.get("page");
+    console.log('page ->', page)
+
+    $('#sorting_select option').each(function () {
+        if ($(this).hasClass(sort + ' ' + field)) {
+            $(this).prop('selected', true);
+        }
+    });
+    if (search_field) {
+        $('#search').val(search_field)
+
+    }
+
+    $('#sorting_select').change(function (e) {
+        console.log('sort')
+        let location = document.location.href.split('?')[0]
+        let sorting_params = $('option:selected').attr('class').split(' ')
+        let url = new URL(location);
+        url.searchParams.append('sorting', sorting_params[0]);
+        url.searchParams.append('field', sorting_params[1]);
+        if (search_field) {
+            url.searchParams.append('search', search_field);
+        }
+        if (page) {
+            url.searchParams.set('page', page);
+        }
+        document.location.href = url
+    })
+
+    $('#click_search').click(function (e) {
+        let location = document.location.href.split('?')[0]
+        let search_val = $('#search').val()
+        let url = new URL(location);
+        if (sort) {
+            url.searchParams.append('sorting', sort);
+        }
+        if (field) {
+            url.searchParams.append('field', field);
+        }
+        if (page) {
+            url.searchParams.set('page', page);
+        }
+        url.searchParams.append('search', search_val);
+        document.location.href = url
+    })
+</script>

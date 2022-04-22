@@ -7,7 +7,7 @@ from django.views.generic import CreateView, ListView, FormView
 
 from tasks.forms import TaskForm
 from tasks.models import Task
-from tasks.sorting import sorting_tasks
+from .sorting import sorting_tasks
 
 
 class ContextDataMixin:
@@ -31,6 +31,16 @@ class TasksListView(ContextDataMixin, ListView):
         if get_params:
             return sorting_tasks(**get_params)
         super(TasksListView, self).get_ordering()
+
+    # def get_ordering(self):
+    #     params = {}
+    #     ordering = self.request.GET.get('orderby')
+    #     page = self.request.GET.get('page')
+    #     if ordering:
+    #         params[ordering] = ordering
+    #     if page:
+    #         params[page] = page
+    #     return params
 
 
 class TaskCreateView(ContextDataMixin, SuccessMessageMixin, CreateView):
