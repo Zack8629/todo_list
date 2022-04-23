@@ -31,8 +31,19 @@
         {% include 'navbar.html' %}
     {% endblock %}
 
+    {% block message %}
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %}
+                    <li>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock %}
+
     {% block content %}
-        <h1>BASE FILE</h1>
     {% endblock %}
 
     {% block footer %}

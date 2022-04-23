@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, FormView
+from django.views.generic import CreateView, ListView, FormView, UpdateView
 
 from tasks.forms import TaskForm
 from tasks.models import Task
@@ -34,17 +34,38 @@ class TasksListView(ContextDataMixin, ListView):
 
 
 class TaskCreateView(ContextDataMixin, SuccessMessageMixin, CreateView):
-    form_class = TaskForm
     model = Task
+    form_class = TaskForm
     template_name = 'tasks_create_form.html'
     page_title = 'Создание задачи'
-    success_message = 'Задача успешна создана'
+    success_message = 'Задача успешна создана!'
 
     def get_success_url(self):
         return reverse_lazy('tasks:index')
+
+    def form_valid(self, form, *args, **kwargs):
+        form.save()
+        return super(TaskCreateView, self).form_valid(form)
 
 
 class LoginView(SuccessURLAllowedHostsMixin, FormView):
     form_class = AuthenticationForm
     redirect_field_name = REDIRECT_FIELD_NAME
     template_name = 'registration/login.html'
+
+
+class TaskUpdateView(ContextDataMixin, SuccessMessageMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'tasks_update_form.html'
+    page_title = 'Редактирование задачи'
+    success_message = 'Задача успешно изменена'
+
+    def get_success_url(self):
+        return reverse_lazy('tasks:index')
+
+    def form_valid(self, form, *args, **kwargs):
+        instance = form.save(commit=False)
+        instance.is_edited = True
+        instance.save()
+        return super(TaskUpdateView, self).form_valid(form)

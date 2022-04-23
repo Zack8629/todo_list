@@ -6,6 +6,7 @@ class Task(models.Model):
     email = models.EmailField(max_length=256)
     task_text = models.TextField()
     is_done = models.BooleanField(default=False)
+    is_edited = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Задача'

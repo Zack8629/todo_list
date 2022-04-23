@@ -12,13 +12,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'tasks:create_task' %}">Создать задачу</a>
                 </li>
-                <select id="sorting_select" style="width: 150px">
+                <select id="sorting_select" aria-label=".form-select-sm example">
                     <option class="desc username">Пользователь</option>
-                    <option class="asc username">- Пользователь</option>
+                    <option class="asc username">Пользователь по убыванию</option>
                     <option class="desc email">Email</option>
-                    <option class="asc email">-Email</option>
+                    <option class="asc email">Email по убыванию</option>
                     <option class="desc is_done">Статус</option>
-                    <option class="asc is_done">-Статус</option>
+                    <option class="asc is_done">Статус по убыванию</option>
                 </select>
             </ul>
 

@@ -8,6 +8,9 @@
             <th scope="col">email</th>
             <th scope="col">Текст задачи</th>
             <th scope="col">Статус</th>
+            {% if request.user.is_authenticated %}
+                <th scope="col">редактирование</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -16,13 +19,22 @@
                 <td>{{ task.username }}</td>
                 <td>{{ task.email }}</td>
                 <td>{{ task.task_text }}</td>
-
-                {% if task.is_done %}
+                {% if task.is_done and task.is_edited %}
+                    <td>Выполнено. Отредактировано администратором</td>
+                {% elif task.is_done %}
                     <td>Выполнено</td>
+                {% elif task.is_edited %}
+                    <td>Отредактировано администратором</td>
                 {% else %}
                     <td></td>
                 {% endif %}
-
+                <td>
+                    {% if request.user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'tasks:update_task' task.id %} ">
+                            редактировать
+                        </a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
