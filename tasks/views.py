@@ -5,7 +5,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView, UpdateView
 
-from tasks.forms import TaskForm
+from tasks.forms import TaskCreateForm, TaskUpdateForm
 from tasks.models import Task
 from .sorting import sorting_tasks
 
@@ -35,7 +35,7 @@ class TasksListView(ContextDataMixin, ListView):
 
 class TaskCreateView(ContextDataMixin, SuccessMessageMixin, CreateView):
     model = Task
-    form_class = TaskForm
+    form_class = TaskCreateForm
     template_name = 'tasks_create_form.html'
     page_title = 'Создание задачи'
     success_message = 'Задача успешна создана!'
@@ -56,7 +56,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
 
 class TaskUpdateView(ContextDataMixin, SuccessMessageMixin, UpdateView):
     model = Task
-    form_class = TaskForm
+    form_class = TaskUpdateForm
     template_name = 'tasks_update_form.html'
     page_title = 'Редактирование задачи'
     success_message = 'Задача успешно изменена'
@@ -66,6 +66,13 @@ class TaskUpdateView(ContextDataMixin, SuccessMessageMixin, UpdateView):
 
     def form_valid(self, form, *args, **kwargs):
         instance = form.save(commit=False)
-        instance.is_edited = True
+        self.edit_mark(instance)
         instance.save()
         return super(TaskUpdateView, self).form_valid(form)
+
+    def get_text_before_editing(self):
+        return self.get_object().task_text
+
+    def edit_mark(self, instance):
+        if self.get_text_before_editing() != instance.task_text:
+            instance.is_edited = True
