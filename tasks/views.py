@@ -2,6 +2,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView, UpdateView
 
@@ -76,3 +77,25 @@ class TaskUpdateView(ContextDataMixin, SuccessMessageMixin, UpdateView):
     def edit_mark(self, instance):
         if self.get_text_before_editing() != instance.task_text:
             instance.is_edited = True
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('tasks:login')
+        return super(TaskUpdateView, self).dispatch(request, *args, **kwargs)
+
+
+class TaskDoneView(ContextDataMixin, SuccessMessageMixin, UpdateView):
+    model = Task
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('tasks:login')
+        elif request.user.is_authenticated:
+            self.mark_as_done()
+            return redirect('tasks:index')
+        return super(TaskDoneView, self).dispatch(request, *args, **kwargs)
+
+    def mark_as_done(self):
+        obj = self.get_object()
+        obj.is_done = True
+        obj.save()

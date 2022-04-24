@@ -21,9 +21,12 @@
                 <td>{{ task.email }}</td>
                 <td>{{ task.task_text }}</td>
                 {% if task.is_done and task.is_edited %}
-                    <td>Выполнено. Отредактировано администратором</td>
+                    <td>
+                        <p>Выполнено</p>
+                        <p>Отредактировано администратором</p>
+                    </td>
                 {% elif task.is_done %}
-                    <td>Выполнено.</td>
+                    <td>Выполнено</td>
                 {% elif task.is_edited %}
                     <td>Отредактировано администратором</td>
                 {% else %}
@@ -31,6 +34,9 @@
                 {% endif %}
                 <td>
                     {% if request.user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'tasks:done' task.id %} ">
+                            Завершить
+                        </a>
                         <a class="nav-link" href="{% url 'tasks:update' task.id %} ">
                             Редактировать
                         </a>
