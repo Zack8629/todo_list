@@ -1,0 +1,12 @@
+[Unit]
+Description=todo_list daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/test_tasks/todo_list
+ExecStart=/usr/bin/gunicorn3 --access-logfile server.logs --workers 3 --bind unix:/home/test_tasks/todo_list/conf_server/todo_list.sock todo_list.wsgi
+
+[Install]
+WantedBy=multi-user.target
