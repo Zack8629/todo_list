@@ -1,5 +1,6 @@
 /tmp/
 /todo_list/secrets.py
+/conf_server/
 
 # Created by https://www.toptal.com/developers/gitignore/api/git,linux,python,django,pycharm,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=git,linux,python,django,pycharm,react
